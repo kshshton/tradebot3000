@@ -14,14 +14,12 @@ class Table:
         self.scraped_date = f"{day}_{month}_{year}"
 
     def __get_names(self) -> pd.DataFrame:
-        """Names of columns"""
         page = requests.get(url="https://csgo.steamanalyst.com/markets")
         soup = BeautifulSoup(page.text, "lxml")
         data = soup.find("table", id="pricelist").get_text().split("\n")
         return pd.DataFrame([x for x in data if x != '']).T
 
     def __get_values(self) -> pd.DataFrame:
-        """Table with items"""
         headers = {
             'referer': 'https://csgo.steamanalyst.com/markets',
             'x-requested-with': 'XMLHttpRequest',
@@ -55,13 +53,9 @@ class Table:
         return pd.DataFrame(data)
 
     def get_table(self) -> pd.DataFrame:
-        df = pd.concat(
-            [
-                self.__get_names(),
-                self.__get_values()
-            ],
-        )
-        return df.apply(lambda x: x.str.replace("</a>", ""))
+        table = self.__get_values()
+        table.columns = self.__get_names().iloc[0]
+        return table.apply(lambda x: x.str.replace("</a>", ""))
 
     def save_to_csv(self, file_name: str) -> None:
         return self.get_table().to_excel(
