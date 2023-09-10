@@ -5,6 +5,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+from utils.request import params
+
 
 class Table:
     def __init__(self) -> None:
@@ -24,27 +26,10 @@ class Table:
             'referer': 'https://csgo.steamanalyst.com/markets',
             'x-requested-with': 'XMLHttpRequest',
         }
-        params = {'draw': '1'}
-        for index in range(0, 17):
-            params[f'columns[{index}][data]'] = str(index)
-            params[f'columns[{index}][name]'] = ''
-            params[f'columns[{index}][searchable]'] = 'true'
-            params[f'columns[{index}][orderable]'] = 'true'
-            params[f'columns[{index}][search][value]'] = ''
-            params[f'columns[{index}][search][regex]'] = 'false'
-        params['order[0][column]'] = '0'
-        params['order[0][dir]'] = 'asc' 
-        params['start'] = '0'           
-        params['length'] = '25'         
-        params['search[value]'] = ''    
-        params['search[regex]'] = 'false'
-        params['custom_order'] = 'popular'
-        params['token'] = ''            
-        params['___'] = 'default'       
         response = requests.get(
             'https://csgo.steamanalyst.com/list-markets.php',
-              headers=headers, 
-              params=params
+            headers=headers, 
+            params=params,
         )
         soup = BeautifulSoup(response.text, "lxml")
         raw_data = soup.find("p").get_text()
@@ -58,9 +43,9 @@ class Table:
         return table.apply(lambda x: x.str.replace("</a>", ""))
 
     def save_to_csv(self, file_name: str) -> None:
-        return self.get_table().to_excel(
+        self.get_table().to_excel(
             f"{file_name}_{self.scraped_date}.xlsx",
-            index=False
+            index=False,
         )
 
     def __str__(self) -> str:
