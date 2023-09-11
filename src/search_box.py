@@ -47,7 +47,7 @@ combobox.set("Condition")
 
 checkbox = customtkinter.CTkCheckBox(
     master=frame, 
-    text="Stattrak"
+    text="Stattrak",
 )
 checkbox.pack(**position)
 

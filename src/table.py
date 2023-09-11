@@ -29,12 +29,11 @@ class Table:
         response = requests.get(
             'https://csgo.steamanalyst.com/list-markets.php',
             headers=headers, 
-            params=params,
+            params=params(),
         )
         soup = BeautifulSoup(response.text, "lxml")
         raw_data = soup.find("p").get_text()
-        data = json.loads(raw_data)
-        data = data["data"]
+        data = json.loads(raw_data)["data"]
         return pd.DataFrame(data)
 
     def get_table(self) -> pd.DataFrame:

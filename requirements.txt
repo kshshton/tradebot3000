@@ -1,4 +1,6 @@
 bs4
 customtkinter
-requests
+lxml
 pandas
+requests
+openpyxl
