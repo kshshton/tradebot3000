@@ -41,7 +41,7 @@ class Table:
         table.columns = self.__get_names().iloc[0]
         return table.apply(lambda x: x.str.replace("</a>", ""))
 
-    def save_to_csv(self, file_name: str) -> None:
+    def save_to_xlsx(self, file_name: str) -> None:
         self.get_table().to_excel(
             f"{file_name}_{self.scraped_date}.xlsx",
             index=False,
